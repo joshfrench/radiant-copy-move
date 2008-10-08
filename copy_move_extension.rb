@@ -12,6 +12,7 @@ class CopyMoveExtension < Radiant::Extension
   
   def activate
 #    raise "The Shards extension is required and must be loaded first!" unless defined?(Shards)
+    Page.const_set :NONCOPY_FIELDS, %w(created_at updated_at published_at created_by_id updated_by_id lock_version)
     admin.page.index.add :sitemap_head, 'copy_move_extra_th'
     admin.page.index.add :node, 'copy_move_extra_td', :after => "add_child_column"
   end

@@ -68,10 +68,13 @@ private
   def duplicate_page(page, new_parent)    
     new_title, new_slug = suggest_title_and_slug_for_new_page(page, new_parent)
     new_status_id = params[:status_id].blank? ? page.status_id : params[:status_id]
-    new_page = Page.create(
+    attrs = page.attributes.dup
+    attrs.delete_if { |k,v| Page::NONCOPY_FIELDS.include? k }
+    attrs.merge!(
       :title => new_title, :slug => new_slug, :breadcrumb => new_title, :class_name => page.class_name,
       :status_id => new_status_id, :parent_id => new_parent.id, :layout_id => page.layout_id
-    ) 
+    )
+    new_page = Page.create(attrs)
     page.parts.each do |part|
       new_page.parts << PagePart.create(:name => part.name, :filter_id => part.filter_id, :content => part.content)
     end

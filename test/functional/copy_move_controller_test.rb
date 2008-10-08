@@ -172,4 +172,11 @@ class CopyMoveControllerTest < Test::Unit::TestCase
     end
   end
   
+  def test_copy_move_should_duplicate_any_fields_not_specifically_excluded
+    desc = 'alphabetablah'
+    pages(:projects).update_attributes(:description => desc)
+    post :copy_move, :id => pages(:projects), :copy_move_action => 'page'
+    assert_equal desc, assigns(:new_page).description
+  end
+
 end
